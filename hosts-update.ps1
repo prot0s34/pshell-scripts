@@ -1,13 +1,10 @@
-# Define the path to the hosts file
 $hostsFilePath = "C:\Windows\System32\drivers\etc\hosts"
 
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 
-# Get the VM IP addresses and VM names
 $vmNetworkAdapters = Get-VMNetworkAdapter -VMName *
 $vmIPAddresses = $vmNetworkAdapters | Where-Object { $_.IPAddresses.Count -gt 0 } | Select-Object VMName, IPAddresses
 
-# Define a function to update the hosts file
 function UpdateHostsFile($vmName, $ipv4) {
     $hostsContent = Get-Content $hostsFilePath -Raw
     $pattern = "\b$vmName\b"
@@ -19,7 +16,6 @@ function UpdateHostsFile($vmName, $ipv4) {
     Set-Content $hostsFilePath -Value $hostsContent
 }
 
-# Loop through the VM IP addresses and update the hosts file
 $vmIPAddresses | ForEach-Object {
     $vmName = $_.VMName
     $ipv4 = $_.IPAddresses | Where-Object { $_ -match '\d+\.\d+\.\d+\.\d+' } | Select-Object -First 1

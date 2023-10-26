@@ -1,1 +1,3 @@
-Get-NetIPInterface | where {$_.InterfaceAlias -eq 'vEthernet (WSL)' -or $_.InterfaceAlias -eq 'vEthernet (k8s-switch)' -or $_.InterfaceAlias -eq 'vEthernet (Default Switch)'} | Set-NetIPInterface -Forwarding Enabled
+$interfaceAliases = @('vEthernet (WSL)', 'vEthernet (k8s-switch)', 'vEthernet (Default Switch)')
+
+Get-NetIPInterface | where {$_.InterfaceAlias -in $interfaceAliases} | Set-NetIPInterface -Forwarding Enabled
